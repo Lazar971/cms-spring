@@ -73,6 +73,7 @@ public class UserController {
     @PostMapping("/register")
     public Object register(@RequestBody UnregisteredUser unregisteredUser){
         User user=service.reqister(unregisteredUser);
+        System.out.println("User: "+user);
         httpSession.setAttribute(Constants.USER_ATTRIBUTE, user);
         return new UserDTO(user);
     }

@@ -8,11 +8,12 @@ package com.lazar.CMSServer.service;
 import com.lazar.CMSServer.dto.UnregisteredUser;
 import com.lazar.CMSServer.dto.UserDTO;
 import com.lazar.CMSServer.model.User;
+import com.lazar.CMSServer.model.UserCategory;
+import com.lazar.CMSServer.repository.UserCategoryRepository;
 import com.lazar.CMSServer.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +26,9 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private UserCategoryRepository categoryRepository;
+    
     public User login(String username, String password) {
         
         User user=repository.login(username, password);
@@ -39,6 +43,12 @@ public class UserService {
             return null;
         }
         User user=new User(null, unregisteredUser.getFirstName(), unregisteredUser.getLastName(), unregisteredUser.getAge(), unregisteredUser.getUsername(), unregisteredUser.getPassword());
+        List<UserCategory> categories=categoryRepository.findAll();
+        for (UserCategory category : categories) {
+            if(category.getUserCategoryId()==2){
+                user.setCategory(category);
+            }
+        }
         user=repository.save(user);
         
         return user;
